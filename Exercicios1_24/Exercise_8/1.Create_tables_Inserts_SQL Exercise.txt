@@ -1,0 +1,131 @@
+CREATE Schemas
+———————————————————
+    • CREATE SCHEMA IF NOT EXISTS raw;
+    • CREATE SCHEMA IF NOT EXISTS report;
+
+
+CREATE TABLES in RAW
+——————————————————————
+CREATE TABLE IF NOT EXISTS raw.products
+(
+    id serial NOT NULL,
+    name character varying NOT NULL,
+    price int NOT NULL,
+    CONSTRAINT products_pkey PRIMARY KEY (id)
+);
+
+
+CREATE TABLE IF NOT EXISTS raw.reviews
+(
+    id serial NOT NULL,
+    product_id integer NOT NULL,
+    rating integer NOT NULL,
+    review_text_opinion text,
+    review_ts timestamp,
+    user_id integer NOT NULL,
+    CONSTRAINT reviews_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_product_id FOREIGN KEY (product_id)
+        REFERENCES raw.products (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS raw.sales
+(
+    id serial NOT NULL,
+    product_id integer NOT NULL,
+    sales_ts timestamp NOT NULL,
+    user_id integer NOT NULL,
+    CONSTRAINT sales_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_product_id FOREIGN KEY (product_id)
+        REFERENCES raw.products (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+
+CREATE TABLE raw.users
+(
+    id integer NOT NULL,
+    username varchar(255) NOT NULL
+);
+
+
+
+CREATE TABLES in REPORT
+————————————————————————
+
+CREATE TABLE IF NOT EXISTS report.product_reviews
+(
+    product_name character varying(255) NOT NULL,
+    nr_reviews integer DEFAULT 0,
+    date date
+);
+
+
+CREATE TABLE IF NOT EXISTS report.product_sales
+(
+    product_name character varying(255) NOT NULL,
+    sale_date date NOT NULL,
+    nr_sales integer NOT NULL,
+    CONSTRAINT product_sales_pkey PRIMARY KEY (product_name, sale_date)
+);
+
+
+CREATE TABLE report.ReportBestRatedProductsDataset
+(
+    product_name character varying(255) NOT NULL,
+    avaliacao_media decimal(4,0) NOT NULL,
+    PRIMARY KEY (product_name)
+);
+
+
+CREATE TABLE [db-04].REPORT.ReportTopSpenders (
+    username VARCHAR(255),
+    total_spent INT
+);
+
+
+CREATE TABLE [db-04].REPORT.ReportSoldQuantityByProduct (
+    name VARCHAR(255),
+    sold_quantity INT
+);
+
+
+CREATE TABLE [db-04].REPORT.ReportAverageSpentPurchases (
+    avg_spent_per_purchase DECIMAL(10, 2)
+);
+
+
+
+
+
+CREATE Insert in RAW
+——————————————————————
+
+Tabela raw.products:
+INSERT INTO raw.products (id, name, price) VALUES
+(1, 'Produto A', 5),
+(2, 'Produto B', 4),
+(3, 'Produto C', 10);
+
+
+Tabela raw.reviews:
+INSERT INTO raw.reviews (id, product_id, rating, review_text_opinion, review_ts, user_id) VALUES
+(2, 2, 3, 'Bom produto, um pouco caro.', '2025-01-21 11:00:00', 2),
+(1, 1, 5, 'Produto muito bom, recomendo!', '2025-02-10 10:30:00', 1),
+(3, 3, 2, 'Podia ser melhor.', '2025-03-09 12:15:00', 3);
+
+
+Tabela raw.sales:
+INSERT INTO raw.sales (id, product_id, sales_ts, user_id) VALUES
+(1, 1, '2025-01-06 15:00:00', 1),
+(2, 2, '2025-01-29 16:00:00', 2),
+(3, 3, '2025-02-21 17:00:00', 3);
+
+
+Tabela raw.users:
+INSERT INTO raw.users (id, username) VALUES
+(1, 'Rute'),
+(2, 'Dinis'),
+(3, 'Vanessa');
