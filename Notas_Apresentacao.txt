@@ -1,0 +1,16 @@
+select * from raw.salestream
+truncate table raw.salestream
+
+
+select * from report.ReportAverageSpentPurchases
+select * from report.ReportBestRatedProductsDataset
+select * from report.ReportSoldQuantityByProduct
+select * from report.ReportTopSpenders
+select * from report.ReportTopUsersAverageReviews
+
+
+truncate table report.ReportAverageSpentPurchases
+truncate table report.ReportBestRatedProductsDataset
+truncate table report.ReportSoldQuantityByProduct
+truncate table report.ReportTopSpenders
+truncate table report.ReportTopUsersAverageReviews
