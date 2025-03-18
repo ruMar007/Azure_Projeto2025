@@ -1,0 +1,11 @@
+INSERT INTO raw.products (name, price) VALUES ('Product B', 29.99);
+
+INSERT INTO raw.users (username) VALUES ('Dinis');
+
+INSERT INTO raw.sales (product_id, sales_ts, user_id) VALUES (4, '2025-01-16 03:00:00', 14);
+
+INSERT INTO "raw".reviews(
+	id, product_id, rating, review_text_opinion, review_ts, user_id)
+	VALUES (26, 1, 'Experiência não foi boa.', '2024-12-01 22:04:58', 3);
+
+

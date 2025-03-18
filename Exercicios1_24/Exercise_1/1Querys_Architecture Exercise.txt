@@ -1,0 +1,43 @@
+1.a. Top purchased products by day.
+———————————————————————————————————
+SELECT p.name AS product_name, COUNT(s.id) AS total_sales, CAST(sales_ts AS DATE) AS sales_date
+                        FROM raw.sales s 
+			JOIN raw.products p ON s.product_id = p.id
+                        GROUP BY CAST(sales_ts AS DATE), p.name
+                        ORDER BY CAST(sales_ts AS DATE), total_sales DESC;
+
+
+1.b. Number of reviews by producto.
+———————————————————————————————————
+SELECT CAST(r.review_ts AS DATE) AS review_date, p.name AS product_name, COUNT(r.id) AS total_reviews
+			FROM raw.reviews r
+			INNER JOIN raw.products p ON p.id = r.product_id
+			GROUP BY CAST(r.review_ts AS DATE), p.name
+			ORDER BY review_date;
+
+
+2. Return All User Ranked Products in Real Time.
+————————————————————————————————————————————————
+SELECT p.name AS product_name, AVG(r.rating) AS average_rating, COUNT(r.id) AS total_reviews
+			FROM raw.reviews r
+			JOIN raw.products p ON r.product_id = p.id
+			GROUP BY p.name
+			ORDER BY average_rating DESC, total_reviews DESC;
+
+
+3. Return Real Time User Recommendations.
+—————————————————————————————————————————
+SELECT TOP 10 p.name AS recommended_product, AVG(r.rating) AS average_rating, COUNT(r.id) AS total_reviews
+			FROM raw.reviews r
+			JOIN raw.products p ON r.product_id = p.id
+			GROUP BY p.name
+			HAVING COUNT(r.id) >= 6
+			ORDER BY average_rating DESC, total_reviews DESC;
+
+
+4. Create Search Products service.
+———————————————————————————————————
+SELECT id AS product_id, name AS product_name
+			FROM raw.products
+			WHERE name LIKE '%[keyword]%' 
+			ORDER BY name ASC;

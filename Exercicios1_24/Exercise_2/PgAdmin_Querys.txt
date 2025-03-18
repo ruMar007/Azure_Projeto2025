@@ -1,0 +1,47 @@
+2.1. Which users spent more money on purchases;
+SELECT u.username, SUM(p.price) AS total_spent
+FROM raw.sales s
+JOIN raw.products p ON s.product_id = p.id
+JOIN raw.users u ON s.user_id = u.id
+GROUP BY u.username
+ORDER BY total_spent DESC
+LIMIT 5;
+
+
+2.2. Considering that for each sale we will also have the quantity of products sold, calculate the sold quantity by producto;
+SELECT p.name, COUNT(s.product_id) AS sold_quantity
+FROM raw.sales s
+JOIN raw.products p ON s.product_id = p.id
+GROUP BY p.name
+ORDER BY sold_quantity DESC;
+
+
+2.3.  What was the average spent on purchases;
+SELECT ROUND(AVG(total_spent), 2) AS avg_spent_per_purchase
+FROM (
+    SELECT
+        s.user_id,
+        s.sales_ts,
+        SUM(p.price) AS total_spent
+    FROM raw.sales s
+    JOIN raw.products p ON s.product_id = p.id
+    GROUP BY s.user_id, s.sales_ts
+) AS subquery;
+
+
+2.4.  Which top 3 users had the higher average reviews;
+SELECT u.username, ROUND(AVG(r.rating), 2) AS avg_rating
+FROM raw.reviews r
+JOIN raw.users u ON r.user_id = u.id
+GROUP BY u.username
+ORDER BY avg_rating DESC
+LIMIT 3;
+
+
+2.5.  Which products had the highest average reviews.
+SELECT p.name AS producto_name, ROUND(AVG(r.rating), 2) AS avg_rating
+FROM raw.reviews r
+JOIN raw.products p ON r.product_id = p.id
+GROUP BY p.id, p.name
+ORDER BY avg_rating DESC
+LIMIT 3;
